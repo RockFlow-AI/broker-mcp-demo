@@ -25,7 +25,7 @@
 
 ## 工具
 
-共 9 个示例工具，覆盖行情、持仓 / 订单、交易三类。下游接口路径均为示意，
+共 10 个示例工具，覆盖行情、持仓 / 订单、交易、知识库四类。下游接口路径均为示意，
 接入真实后端时按约定改 [tools/](src/broker_mcp_demo/tools/) 里的 `path` 即可。
 
 ### 行情（[market.py](src/broker_mcp_demo/tools/market.py)）
@@ -54,6 +54,16 @@
 
 - `order_type`：`MARKET_ORDER`（市价）/ `LIMIT_ORDER`（限价，需带 `price`）。
 - `side`：`BUY` / `SELL`；`validity`：`GOOD_FOR_DAY` / `GOOD_TILL_CANCELLED`。
+
+### 知识库（[knowledge.py](src/broker_mcp_demo/tools/knowledge.py)）
+
+| 工具 | 参数 | 说明 |
+|------|------|------|
+| `search_knowledge_base` | `query`, `language=zh-Hans`, `top=10` | 搜索平台知识库（开户、出入金、交易规则等 QA） |
+
+- `language`：`zh-Hans` / `zh-Hant` / `en`；`top` 范围 3~20。
+- 真实项目通常由后端做向量检索 + 语义排序（如 Azure Cognitive Search、
+  Elasticsearch、Milvus 等），本 demo 不绑定具体实现。
 
 > 每个工具都套了 [decorators.py](src/broker_mcp_demo/tools/decorators.py) 的 `log_tool`
 > 装饰器，统一打印调用方（API key 对应的 client_id）、入参与耗时日志。新增工具时
@@ -132,7 +142,8 @@ src/broker_mcp_demo/
     ├── decorators.py   log_tool 计时日志装饰器
     ├── market.py       行情
     ├── portfolio.py    持仓 / 资产 / 订单
-    └── trade.py        下单
+    ├── trade.py        下单
+    └── knowledge.py    平台知识库搜索
 ```
 
 ## License

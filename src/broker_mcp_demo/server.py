@@ -15,12 +15,12 @@ SERVER_NAME = "Broker MCP Demo"
 
 SERVER_DESCRIPTION = (
     "券商 MCP Server Demo：提供行情查询、持仓资产、订单查询、"
-    "交易下单与撤单等示例工具。全部端点采用 API key 鉴权"
+    "交易下单与撤单、平台知识库搜索等示例工具。全部端点采用 API key 鉴权"
     "（Authorization: Bearer <api-key>）。"
 )
 
 SERVER_INSTRUCTIONS = """\
-券商交易服务 MCP Demo（API key 鉴权），提供行情、持仓资产、交易三类工具。
+券商交易服务 MCP Demo（API key 鉴权），提供行情、持仓资产、交易、知识库四类工具。
 
 使用要点：
 - 拿到公司名/模糊代码时，先用 search_ticker 解析出 symbol 与 market，\
@@ -31,6 +31,8 @@ get_orders / get_order（订单）。
 - 交易操作：create_order（下单）与 cancel_order（撤单）会产生真实交易，\
 调用前先用 get_assets 确认资金，并与用户确认关键参数\
 （标的、方向、数量、价格）。
+- 平台规则类问题（开户、出入金、交易规则等）用 search_knowledge_base \
+搜索知识库，适合 "怎么开户""出入金要多久" 这类 QA 式提问。
 - 未配置下游后端地址时，各工具返回带 "mock": true 标记的示例数据，\
 仅用于演示，不代表真实行情与账户状态。
 - 鉴权：请求需携带 Authorization: Bearer <api-key>；返回 401 时说明 \

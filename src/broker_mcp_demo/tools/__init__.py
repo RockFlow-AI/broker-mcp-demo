@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from . import market, portfolio, trade
+from . import knowledge, market, portfolio, trade
 
 if TYPE_CHECKING:
     from fastmcp import FastMCP
@@ -18,3 +18,4 @@ def register_tools(mcp: "FastMCP") -> None:
     market.register(mcp)     # 标的搜索 / 最新行情 / K 线
     portfolio.register(mcp)  # 持仓 / 资产 / 订单查询 / 撤单
     trade.register(mcp)      # 下单
+    knowledge.register(mcp)  # 平台知识库搜索
