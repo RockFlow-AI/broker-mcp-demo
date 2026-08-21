@@ -22,6 +22,7 @@ async def backend_request(
     path: str,
     *,
     client_id: str,
+    user_id: str = "",
     query: dict[str, Any] | None = None,
     body: dict[str, Any] | None = None,
     mock: Any = None,
@@ -32,6 +33,9 @@ async def backend_request(
       ``BROKER_MCP_BACKEND_BASE_URL`` 之后。
     - ``client_id``：调用方标识（来自 API key），通过 ``X-Client-Id`` header
       下发给后端，仅作示意——真实项目请按后端的鉴权约定改造。
+    - ``user_id``：券商体系内的用户 ID（来自请求头 ``X-User-Id``），
+      非空时通过 ``X-User-Id`` header 原样透传给后端，
+      供持仓、订单等接口按用户维度执行。
     - ``mock``：后端地址未配置时返回的示例数据；为 ``None`` 时直接报错。
     """
     base_url = cfg.backend_base_url()
@@ -53,7 +57,9 @@ async def backend_request(
 
     url = f"{base_url.rstrip('/')}{path}"
     headers = {"X-Client-Id": client_id}
-    logger.info("[backend] %s %s query=%s", method, url, query)
+    if user_id:
+        headers["X-User-Id"] = user_id
+    logger.info("[backend] %s %s user=%s query=%s", method, url, user_id or "-", query)
     async with httpx.AsyncClient(timeout=cfg.backend_timeout()) as client:
         resp = await client.request(
             method=method,

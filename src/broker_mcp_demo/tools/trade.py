@@ -8,7 +8,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ..backend import backend_request
-from ..identity import current_client_id
+from ..identity import current_client_id, current_user_id
 from .decorators import log_tool
 
 if TYPE_CHECKING:
@@ -77,6 +77,7 @@ def register(mcp: "FastMCP") -> None:
             "POST",
             "/api/v1/orders",
             client_id=current_client_id(),
+            user_id=current_user_id(),
             body=body,
             mock={"orderId": "demo-order-1002", "status": "OPEN", **body},
         )

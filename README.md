@@ -18,10 +18,16 @@
 
 请求流程：
 
-1. 客户端带 `Authorization: Bearer <api-key>` 请求 `POST /mcp`。
+1. 客户端带 `Authorization: Bearer <api-key>` 请求 `POST /mcp`；如需按用户维度
+   执行，同时在请求头 `X-User-Id` 中原样透传券商体系内的用户 ID。
 2. 服务端将 key 与 `BROKER_MCP_API_KEYS` 中配置的逐一比对，命中放行、否则 `401`。
 3. 工具调用被代理到 `BROKER_MCP_BACKEND_BASE_URL` 指向的券商后端；
    未配置时返回内置示例数据。
+
+调用方身份由两层组成：API key 解析出的 `client_id`（哪家券商）+ 请求头
+`X-User-Id` 透传的用户 ID（该券商体系内的哪个用户）。持仓、资产、订单、下单等
+工具会把 `X-User-Id` 原样透传给券商后端，按用户维度执行；未携带时该 header
+不下发（如仅体验行情类工具）。
 
 ## 工具
 
@@ -134,7 +140,7 @@ src/broker_mcp_demo/
 ├── __main__.py     入口（python -m broker_mcp_demo）
 ├── config.py       环境变量 / .env 配置读取
 ├── auth.py         API key 鉴权（ApiKeyVerifier）
-├── identity.py     从鉴权上下文解析 client_id
+├── identity.py     解析调用方身份（client_id + X-User-Id）
 ├── backend.py      下游后端 HTTP 调用封装（未配置地址时回退示例数据）
 ├── server.py       FastMCP 实例装配
 └── tools/          MCP 工具

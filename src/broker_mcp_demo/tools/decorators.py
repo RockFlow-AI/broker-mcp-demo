@@ -11,7 +11,7 @@ import logging
 import time
 from typing import Any, Awaitable, Callable, TypeVar
 
-from ..identity import current_client_id
+from ..identity import current_client_id, current_user_id
 
 logger = logging.getLogger("broker_mcp_demo.tools")
 
@@ -25,8 +25,12 @@ def log_tool(func: F) -> F:
     async def wrapper(*args: Any, **kwargs: Any) -> Any:
         name = func.__name__
         client = current_client_id()
+        user = current_user_id()
         start = time.perf_counter()
-        logger.info("[tool] %s 开始 client=%s kwargs=%s", name, client, kwargs)
+        logger.info(
+            "[tool] %s 开始 client=%s user=%s kwargs=%s",
+            name, client, user or "-", kwargs,
+        )
         try:
             result = await func(*args, **kwargs)
         except Exception as exc:

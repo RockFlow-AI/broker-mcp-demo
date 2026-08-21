@@ -8,7 +8,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ..backend import backend_request
-from ..identity import current_client_id
+from ..identity import current_client_id, current_user_id
 from .decorators import log_tool
 
 if TYPE_CHECKING:
@@ -26,6 +26,7 @@ def register(mcp: "FastMCP") -> None:
             "GET",
             "/api/v1/positions",
             client_id=current_client_id(),
+            user_id=current_user_id(),
             mock={
                 "positions": [
                     {"symbol": "AAPL", "market": "US", "quantity": 10,
@@ -44,6 +45,7 @@ def register(mcp: "FastMCP") -> None:
             "GET",
             "/api/v1/assets",
             client_id=current_client_id(),
+            user_id=current_user_id(),
             mock={
                 "currency": "USD",
                 "cash": 12500.0,
@@ -70,6 +72,7 @@ def register(mcp: "FastMCP") -> None:
             "GET",
             "/api/v1/orders",
             client_id=current_client_id(),
+            user_id=current_user_id(),
             query={"status": status, "limit": limit},
             mock={
                 "orders": [
@@ -94,6 +97,7 @@ def register(mcp: "FastMCP") -> None:
             "GET",
             f"/api/v1/orders/{order_id}",
             client_id=current_client_id(),
+            user_id=current_user_id(),
             mock={
                 "orderId": order_id, "symbol": "AAPL", "market": "US",
                 "side": "BUY", "orderType": "LIMIT_ORDER", "price": 220.0,
@@ -118,5 +122,6 @@ def register(mcp: "FastMCP") -> None:
             "DELETE",
             f"/api/v1/orders/{order_id}",
             client_id=current_client_id(),
+            user_id=current_user_id(),
             mock={"orderId": order_id, "status": "CANCELLED"},
         )
